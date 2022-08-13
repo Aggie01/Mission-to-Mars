@@ -19,14 +19,8 @@ def scrape_all():
         "news_paragraph": news_paragraph,
         "featured_image": featured_image(browser),
         "facts": mars_facts(),
-        "last_modified": dt.datetime.now(),
-        "hemispheres": hemispheres(browser)
-
-        }
-
-    
-
-    
+        "last_modified": dt.datetime.now()
+    }
 
     # Stop webdriver and return data
     browser.quit()
@@ -61,7 +55,6 @@ def mars_news(browser):
 
     return news_title, news_p
 
-
 # Featured Images
 def featured_image(browser):
     # Visit URL
@@ -88,35 +81,6 @@ def featured_image(browser):
     img_url = f'https://spaceimages-mars.com/{img_url_rel}'
 
     return img_url
-
-#ADDITION
-def hemispheres(browser):
-    url = 'https://marshemispheres.com/'
-    browser.visit(url)
-    hemisphere_image_urls = []
-    for i in range(4):
-        browser.find_by_css("a.product-item img")[i].click()
-        hemi_data = scrape_hemisphere(browser.html)
-        hemi_data['img_url'] = url + hemi_data['img_url']
-        hemisphere_image_urls.append(hemi_data)
-        browser.back()
-        
-    return hemisphere_image_urls
-
-def scrape_hemisphere(html_text):
-    hemi_soup = soup(html_text, "html.parser")
-    try:
-        title_elem = hemi_soup.find("h2", class_="title").get_text()
-        sample_elem = hemi_soup.find("a", text="Sample").get("href")
-    except AttributeError:
-        title_elem = None
-        sample_elem = None
-    hemispheres = {
-       "title": title_elem,
-       "img_url": sample_elem
-   }
-    return hemispheres 
-
 
 def mars_facts():
     # Add try/except for error handling
